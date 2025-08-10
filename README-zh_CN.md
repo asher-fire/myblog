@@ -1,13 +1,13 @@
 <div align="center">
-  <h1>Asher's Personal Blog</h1>
+  <h1>Asher的个人博客</h1>
 
-  English · [中文](./README-zh_CN.md)
+  <!-- [English](./README.md) · 中文 -->
 </div>
 
-## 📝 Based on [tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
+## 📝 基于开源项目 [tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
-This is my personal technical blog, built with Next.js, Tailwind CSS, and MDX.  
-I use it to share thoughts on technology, growth, and life.
+这是我的个人技术博客，使用 Next.js、Tailwind CSS 和 MDX 构建。  
+我用它来分享一些关于技术、成长和生活的想法。
 
 <!-- ## 🛠 Features
 - Static site with dynamic MD/MDX content
@@ -19,6 +19,10 @@ I use it to share thoughts on technology, growth, and life.
 - New theme and layout
 - Deployment to Aliyun instead of Vercel
 - Chinese and English support -->
+
+## 本地开发说明
+
+
 
 ## 📜 License
 MIT © 2021-2025 Timothy Lin  
