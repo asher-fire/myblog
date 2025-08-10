@@ -1,6 +1,6 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: "Asher's Blog",
+  title: 'AsherBlog',
   author: 'Asher',
   headerTitle: 'AsherBlog',
   description:
