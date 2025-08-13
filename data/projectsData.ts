@@ -7,12 +7,10 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: '1A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
+    title: '富婆排行榜',
+    description: `一个玩梗类的微信小程序，当有人说不想努力的时候，抛出该小程序，赚取可怜的微信广告费用。`,
+    imgSrc: '/static/images/projects/rich-woman/code.jpg',
+    href: 'blog/projects/rich-woman',
   },
   {
     title: '2The Time Machine',
