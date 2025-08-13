@@ -7,8 +7,8 @@ const siteMetadata = {
     '一个基于Next.js、Tailwind.css和MDX构建的技术博客, 分享一些关于技术、成长和生活的想法',
   language: 'zh-CN',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://www.hackerbank.cn/blog',
-  siteRepo: 'https://github.com/asher-fire/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://blog.hackerbank.cn',
+  siteRepo: 'https://github.com/asher-fire/myblog',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   // socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
   // mastodon: 'https://mastodon.social/@mastodonuser',
@@ -31,7 +31,6 @@ const siteMetadata = {
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
 
-  /*
   analytics: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
@@ -66,7 +65,7 @@ const siteMetadata = {
     // content security policy in the `next.config.js` file.
     // Select a provider and use the environment variables associated to it
     // https://vercel.com/docs/environment-variables
-    provider: 'giscus', // supported providers: giscus, utterances, disqus
+    provider: '', // supported providers: giscus, utterances, disqus
     giscusConfig: {
       // Visit the link below, and follow the steps in the 'configuration' section
       // https://giscus.app/
@@ -91,7 +90,6 @@ const siteMetadata = {
       lang: 'en',
     },
   },
-  */
   search: {
     provider: 'kbar', // kbar or algolia
     kbarConfig: {
