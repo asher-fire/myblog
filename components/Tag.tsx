@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { slug } from 'github-slugger'
+import tagMapData from 'app/tag-data-map.json'
 interface Props {
   text: string
 }
@@ -10,7 +11,7 @@ const Tag = ({ text }: Props) => {
       href={`/tags/${slug(text)}`}
       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 mr-3 text-sm font-medium uppercase"
     >
-      {text.split(' ').join('-')}
+      {(tagMapData[text.toLocaleLowerCase()] || text).split(' ').join('-')}
     </Link>
   )
 }
