@@ -1,23 +1,16 @@
 'use client'
 
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Radio,
-  RadioGroup,
-  Transition,
-} from '@headlessui/react'
+import { clsx } from 'clsx'
 
-const Sun = () => (
+const SunIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="group:hover:text-gray-100 h-6 w-6"
+    className="h-4 w-4 text-amber-500 drop-shadow-[0_1px_2px_rgba(251,191,36,0.4)] transition-colors duration-300"
+    aria-hidden="true"
   >
     <path
       fillRule="evenodd"
@@ -26,112 +19,127 @@ const Sun = () => (
     />
   </svg>
 )
-const Moon = () => (
+
+const MoonIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="group:hover:text-gray-100 h-6 w-6"
+    className="h-4 w-4 text-gray-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
+    aria-hidden="true"
   >
     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
   </svg>
 )
-const Monitor = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="group:hover:text-gray-100 h-6 w-6"
-  >
-    <rect x="3" y="3" width="14" height="10" rx="2" ry="2"></rect>
-    <line x1="7" y1="17" x2="13" y2="17"></line>
-    <line x1="10" y1="13" x2="10" y2="17"></line>
-  </svg>
-)
-const Blank = () => <svg className="h-6 w-6" />
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme, resolvedTheme } = useTheme()
 
-  // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), [])
 
+  const isLight = mounted && resolvedTheme === 'light'
+  const isDark = mounted && resolvedTheme === 'dark'
+
+  const handleToggle = () => {
+    if (isLight) {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+  }
+
+  // The 'system' theme is not directly toggled.
+  // We can add a separate button for 'system' if needed, or
+  // just assume a two-state toggle between light and dark.
+  // For this implementation, we'll only toggle between light and dark.
+  // The user can still set 'system' manually from their OS settings.
+  // A more advanced solution would involve a popup for all three options.
+
+  // We are recreating the toggle's look with Tailwind CSS classes.
+  // The `relative` and `peer` classes are crucial for the styling.
+
+  if (!mounted) {
+    return null // Return nothing until the component is mounted on the client side.
+  }
+
   return (
-    <div className="flex items-center">
-      <Menu as="div" className="relative inline-block text-left">
-        <div className="hover:text-primary-500 dark:hover:text-primary-400 flex items-center justify-center">
-          <MenuButton aria-label="Theme switcher">
-            {mounted ? resolvedTheme === 'dark' ? <Moon /> : <Sun /> : <Blank />}
-          </MenuButton>
-        </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
+    <div className="flex items-center justify-center sm:justify-end lg:justify-center">
+      <label
+        className="relative inline-block h-8 w-14 cursor-pointer transition-transform duration-300 will-change-transform hover:scale-105 active:scale-95"
+        aria-label="Toggle theme mode"
+      >
+        <input
+          className="peer absolute opacity-0"
+          aria-checked={isDark}
+          type="checkbox"
+          checked={isDark}
+          onChange={handleToggle}
+        />
+        {/* The switch track */}
+        <div
+          className={clsx(
+            'absolute inset-0 overflow-hidden rounded-full transition-colors duration-300',
+            'bg-gradient-to-br from-gray-50 via-gray-200 to-gray-300 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2),inset_0_-2px_5px_rgba(255,255,255,0.5)]',
+            'dark:from-gray-600 dark:via-gray-700 dark:to-gray-900 dark:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4),inset_0_-2px_5px_rgba(255,255,255,0.1)]',
+            {
+              'peer-checked:from-gray-500 peer-checked:via-gray-600 peer-checked:to-gray-800 peer-checked:shadow-[inset_0_2px_8px_rgba(0,0,0,0.4),inset_0_-2px_5px_rgba(255,255,255,0.1)]':
+                isLight, // Transition to dark style when peer-checked (i.e., isDark is true)
+            }
+          )}
         >
-          <MenuItems className="ring-opacity-5 absolute right-0 z-50 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 shadow-lg ring-black focus:outline-hidden dark:bg-gray-800">
-            <RadioGroup value={theme} onChange={setTheme}>
-              <div className="p-1">
-                <Radio value="light">
-                  <MenuItem>
-                    {({ focus }) => (
-                      <button
-                        className={`${focus ? 'bg-primary-600 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      >
-                        <div className="mr-2">
-                          <Sun />
-                        </div>
-                        Light
-                      </button>
-                    )}
-                  </MenuItem>
-                </Radio>
-                <Radio value="dark">
-                  <MenuItem>
-                    {({ focus }) => (
-                      <button
-                        className={`${
-                          focus ? 'bg-primary-600 text-white' : ''
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      >
-                        <div className="mr-2">
-                          <Moon />
-                        </div>
-                        Dark
-                      </button>
-                    )}
-                  </MenuItem>
-                </Radio>
-                <Radio value="system">
-                  <MenuItem>
-                    {({ focus }) => (
-                      <button
-                        className={`${
-                          focus ? 'bg-primary-600 text-white' : ''
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      >
-                        <div className="mr-2">
-                          <Monitor />
-                        </div>
-                        System
-                      </button>
-                    )}
-                  </MenuItem>
-                </Radio>
+          {/* Subtle light effect on the track */}
+          <div
+            className={clsx(
+              'absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-opacity duration-300',
+              { 'opacity-0 peer-checked:opacity-30': isLight, 'opacity-30': isDark }
+            )}
+          ></div>
+        </div>
+
+        {/* The switch thumb with icon */}
+        <div
+          className={clsx(
+            'group absolute top-[2px] flex h-7 w-7 transform items-center justify-center rounded-full transition-transform duration-300',
+            'bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_4px_12px_rgba(0,0,0,0.1),0_-1px_2px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,0.8)]',
+            'dark:bg-gradient-to-br dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 dark:shadow-[0_2px_4px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.2),0_-1px_2px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.2)]',
+            {
+              'translate-x-[24px]': isDark, // Move to the right for dark mode
+              'translate-x-[2px]': isLight, // Stay on the left for light mode
+            }
+          )}
+          tabIndex={-1} // Make it not focusable as the label handles the click
+        >
+          <div
+            className="relative z-10 transition-transform duration-300"
+            style={{ transform: isDark ? 'scale(1.04311)' : 'scale(1)' }}
+          >
+            <div
+              className="relative transition-transform duration-300"
+              style={{
+                transform: isDark ? 'scale(1) rotate(0deg)' : 'scale(1.03886) rotate(264.114deg)',
+              }}
+            >
+              <div
+                className={clsx('transition-opacity duration-300', {
+                  'opacity-100': isLight,
+                  'opacity-0': isDark,
+                })}
+              >
+                <SunIcon />
               </div>
-            </RadioGroup>
-          </MenuItems>
-        </Transition>
-      </Menu>
+              <div
+                className={clsx('absolute inset-0 transition-opacity duration-300', {
+                  'opacity-0': isLight,
+                  'opacity-100': isDark,
+                })}
+              >
+                <MoonIcon />
+              </div>
+            </div>
+          </div>
+        </div>
+      </label>
     </div>
   )
 }
