@@ -58,8 +58,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
   return (
     <div
       className={clsx(
-        'space-y-4 rounded-md border border-gray-200 p-4 dark:border-gray-700',
-        'bg-gray-50 shadow-md',
+        'space-y-4 rounded-md border border-gray-200 p-4 px-3 dark:border-gray-700',
         className
       )}
     >
@@ -90,7 +89,13 @@ const TableOfContents = (props: TableOfContentsProps) => {
           isOpen ? 'max-h-[70vh] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
-        <ul className="flex max-h-[70vh] flex-col space-y-2 overflow-y-auto pr-2">
+        <ul
+          className={clsx(
+            'flex max-h-[70vh] flex-col space-y-2 overflow-y-auto',
+            'scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100',
+            'dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800'
+          )}
+        >
           {toc.map(({ value, depth, url }) => (
             <li
               key={url}
