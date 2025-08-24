@@ -9,6 +9,7 @@ import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import TableOfContents from '@/components/TableOfContents'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -30,7 +31,7 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
+  const { filePath, path, slug, date, title, tags, toc, readingTime } = content
   const basePath = path.split('/')[0]
 
   return (
@@ -38,70 +39,82 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-          <header className="pt-6 xl:pb-6">
+          <header className="pt-3 xl:pb-3">
             <div className="space-y-1 text-center">
-              <dl className="space-y-10">
-                <div>
+              <div>
+                <PageTitle>{title}</PageTitle>
+              </div>
+              <div className="flex flex-wrap items-center justify-center space-x-4 py-3 text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                {/* 作者信息 */}
+                {authorDetails.map((author) => (
+                  <div key={author.name} className="flex items-center gap-2">
+                    {author.avatar && (
+                      <Image
+                        src={author.avatar}
+                        width={20}
+                        height={20}
+                        alt="avatar"
+                        className="h-5 w-5 rounded-full"
+                      />
+                    )}
+                    <div>
+                      <div>{author.name}</div>
+                      {author.twitter && (
+                        <Link
+                          href={author.twitter}
+                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                        >
+                          {author.twitter.replace('https://twitter.com/', '@')}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Divider */}
+                <span className="hidden h-5 border-l border-gray-300 sm:inline-block dark:border-gray-600" />
+
+                {/* 发布时间 */}
+                <dl>
                   <dt className="sr-only">Published on</dt>
-                  <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                  <dd>
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
                     </time>
                   </dd>
-                </div>
-              </dl>
+                </dl>
+
+                {/* Divider */}
+                <span className="hidden h-5 border-l border-gray-300 sm:inline-block dark:border-gray-600" />
+
+                {/* 阅读时间 */}
+                {readingTime?.minutes && <div>阅读时间：{Math.ceil(readingTime?.minutes)}分钟</div>}
+              </div>
+
+              {/* 标签list */}
               <div>
-                <PageTitle>{title}</PageTitle>
+                {tags?.length > 0 && (
+                  <dl>
+                    <dt className="sr-only">Tags</dt>
+                    <dd>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {tags.map((tag) => (
+                          <Tag key={tag} text={tag} />
+                        ))}
+                      </div>
+                    </dd>
+                  </dl>
+                )}
               </div>
             </div>
           </header>
-          <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0 dark:divide-gray-700">
-            <dl className="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-              <dt className="sr-only">Authors</dt>
-              <dd>
-                <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
-                  {authorDetails.map((author) => (
-                    <li className="flex items-center space-x-2" key={author.name}>
-                      {author.avatar && (
-                        <Image
-                          src={author.avatar}
-                          width={38}
-                          height={38}
-                          alt="avatar"
-                          className="h-10 w-10 rounded-full"
-                        />
-                      )}
-                      <dl className="text-sm leading-5 font-medium whitespace-nowrap">
-                        <dt className="sr-only">Name</dt>
-                        <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
-                        <dt className="sr-only">Twitter</dt>
-                        <dd>
-                          {author.twitter && (
-                            <Link
-                              href={author.twitter}
-                              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                            >
-                              {author.twitter
-                                .replace('https://twitter.com/', '@')
-                                .replace('https://x.com/', '@')}
-                            </Link>
-                          )}
-                        </dd>
-                      </dl>
-                    </li>
-                  ))}
-                </ul>
-              </dd>
-            </dl>
-            <div className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0 dark:divide-gray-700">
+          <div className="grid grid-cols-12 gap-x-6 pb-8 xl:divide-y xl:divide-gray-200 xl:pb-0 xl:dark:divide-gray-700">
+            <div className="hidden xl:col-span-3 xl:block">
+              {/* Table of Contents goes here on the left */}
+              <TableOfContents toc={toc} className="sticky top-24" />
+            </div>
+            <div className="divide-y divide-gray-200 xl:col-span-9 xl:divide-y-0 dark:divide-gray-700">
               <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
-              <div className="hidden pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussUrl(path)} rel="nofollow">
-                  Discuss on Twitter
-                </Link>
-                {` • `}
-                <Link href={editUrl(filePath)}>View on GitHub</Link>
-              </div>
               {siteMetadata.comments && (
                 <div
                   className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300"
@@ -112,19 +125,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               )}
             </div>
             <footer>
-              <div className="divide-gray-200 text-sm leading-5 font-medium xl:col-start-1 xl:row-start-2 xl:divide-y dark:divide-gray-700">
-                {tags && (
-                  <div className="py-4 xl:py-8">
-                    <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                      标签
-                    </h2>
-                    <div className="flex flex-wrap">
-                      {tags.map((tag) => (
-                        <Tag key={tag} text={tag} />
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="pt-4 xl:pt-8">
                 {(next || prev) && (
                   <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
                     {prev && prev.path && (
@@ -149,12 +150,10 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     )}
                   </div>
                 )}
-              </div>
-              <div className="pt-4 xl:pt-8">
                 <Link
                   href={`/${basePath}`}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                  aria-label="返回列表"
+                  aria-label="Back to the list"
                 >
                   &larr; 返回列表
                 </Link>
