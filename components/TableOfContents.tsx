@@ -58,12 +58,12 @@ const TableOfContents = (props: TableOfContentsProps) => {
   return (
     <div
       className={clsx(
-        'space-y-4 rounded-md border border-gray-200 p-4 px-3 dark:border-gray-700',
+        'space-y-4 rounded-xl border border-gray-200 p-4 px-3 dark:border-gray-700',
         className
       )}
     >
       <summary
-        className="flex cursor-pointer items-center justify-between gap-4 marker:content-none"
+        className="m-0 flex cursor-pointer items-center justify-between gap-4 marker:content-none"
         onClick={handleToggle}
       >
         <span className="text-lg font-medium text-gray-900 dark:text-gray-100">目录导航</span>
@@ -86,7 +86,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
       <div
         className={clsx(
           'overflow-hidden transition-all duration-500 ease-in-out',
-          isOpen ? 'max-h-[70vh] opacity-100' : 'max-h-0 opacity-0'
+          isOpen ? 'mt-4 max-h-[70vh] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
         <ul
@@ -99,15 +99,19 @@ const TableOfContents = (props: TableOfContentsProps) => {
           {toc.map(({ value, depth, url }) => (
             <li
               key={url}
-              className={clsx('rounded-md px-2 py-1 transition-colors duration-200', {
-                'bg-primary-500/10 text-primary-600 dark:bg-primary-500/20 dark:text-primary-400':
-                  activeId === url,
-                'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200':
-                  activeId !== url,
-              })}
+              className={clsx(
+                'rounded-lg px-2 py-1 transition-colors duration-200',
+                {
+                  'bg-primary-500/10 text-primary-600 dark:bg-primary-500/20 dark:text-primary-400':
+                    activeId === url,
+                  'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200':
+                    activeId !== url,
+                },
+                { 'font-bold': depth === 2 } // Optional: Bold main headings
+              )}
               style={{ paddingLeft: `calc(${(depth - 2) * 12}px + 0.5rem)` }}
             >
-              <Link href={url} className="block leading-normal">
+              <Link href={url} className="block leading-[normal]">
                 {value}
               </Link>
             </li>
