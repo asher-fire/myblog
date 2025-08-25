@@ -10,6 +10,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import TableOfContents from '@/components/TableOfContents'
+import ReadingProgress from '@/components/ReadingProgress'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -36,10 +37,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
   return (
     <SectionContainer>
+      {/* Reading progress bar */}
+      <ReadingProgress />
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-          <header className="pt-3 xl:pb-3">
+          <header className="pt-6 xl:pb-3">
             <div className="space-y-1 text-center">
               <div>
                 <PageTitle>{title}</PageTitle>
@@ -92,30 +95,66 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </div>
 
               {/* 标签list */}
-              <div>
-                {tags?.length > 0 && (
-                  <dl>
-                    <dt className="sr-only">Tags</dt>
-                    <dd>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {tags.map((tag) => (
-                          <Tag key={tag} text={tag} />
-                        ))}
-                      </div>
-                    </dd>
-                  </dl>
-                )}
-              </div>
+              {tags?.length > 0 && (
+                <dl className="flex justify-center">
+                  <dt className="sr-only">Tags</dt>
+                  <dd>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
+                    </div>
+                  </dd>
+                </dl>
+              )}
             </div>
           </header>
-          <div className="grid grid-cols-12 gap-x-6 pb-8 xl:divide-y xl:divide-gray-200 xl:pb-0 xl:dark:divide-gray-700">
-            <div className="hidden xl:col-span-3 xl:block">
-              {/* Table of Contents goes here on the left */}
-              <TableOfContents toc={toc} className="sticky top-24" />
+          <div className="grid grid-cols-1 gap-y-6 pt-6 xl:grid-cols-12 xl:gap-x-6 xl:divide-y xl:divide-gray-200 xl:pt-10 xl:dark:divide-gray-700">
+            {/* TOC 左侧固定 */}
+            <div className="order-2 border-0 xl:order-1 xl:col-span-3 xl:block">
+              {/* Table of Contents */}
+              <TableOfContents toc={toc} className="sticky top-24 xl:top-28" />
             </div>
-            <div className="divide-y divide-gray-200 xl:col-span-9 xl:divide-y-0 dark:divide-gray-700">
-              <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
-              {siteMetadata.comments && (
+            {/* 文章主体 */}
+            <div className="order-1 xl:order-2 xl:col-span-9">
+              <div className="prose dark:prose-invert max-w-none pb-8">{children}</div>
+              {/* 上一篇，下一篇 */}
+              <footer>
+                <div className="">
+                  {(next || prev) && (
+                    <div className="mx-auto flex flex-col gap-4 sm:flex-row sm:gap-6">
+                      {prev && prev.path && (
+                        <Link
+                          href={`/${prev.path}`}
+                          className="max-w-[50%] flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                        >
+                          <h2 className="mb-2 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                            上一篇
+                          </h2>
+                          <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                            {prev.title}
+                          </div>
+                        </Link>
+                      )}
+                      {next && next.path && (
+                        <Link
+                          href={`/${next.path}`}
+                          className="max-w-[50%] flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                        >
+                          <h2 className="mb-2 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                            下一篇
+                          </h2>
+                          <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                            {next.title}
+                          </div>
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </footer>
+              {/* 评论 */}
+              {siteMetadata?.comments?.provider && (
                 <div
                   className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300"
                   id="comment"
@@ -124,41 +163,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 </div>
               )}
             </div>
-            <footer>
-              <div className="pt-4 xl:pt-8">
-                {(next || prev) && (
-                  <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                    {prev && prev.path && (
-                      <div>
-                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          上一篇
-                        </h2>
-                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${prev.path}`}>{prev.title}</Link>
-                        </div>
-                      </div>
-                    )}
-                    {next && next.path && (
-                      <div>
-                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          下一篇
-                        </h2>
-                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${next.path}`}>{next.title}</Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <Link
-                  href={`/${basePath}`}
-                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                  aria-label="Back to the list"
-                >
-                  &larr; 返回列表
-                </Link>
-              </div>
-            </footer>
           </div>
         </div>
       </article>
