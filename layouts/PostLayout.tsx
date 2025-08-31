@@ -111,12 +111,12 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           </header>
           <div className="grid grid-cols-1 gap-y-6 pt-6 xl:grid-cols-12 xl:gap-x-6 xl:divide-y xl:divide-gray-200 xl:pt-10 xl:dark:divide-gray-700">
             {/* TOC 左侧固定 */}
-            <div className="order-2 border-0 xl:order-1 xl:col-span-3 xl:block">
+            <div className="order-1 border-0 xl:order-1 xl:col-span-3 xl:block">
               {/* Table of Contents */}
               <TableOfContents toc={toc} className="sticky top-24 xl:top-28" />
             </div>
             {/* 文章主体 */}
-            <div className="order-1 xl:order-2 xl:col-span-9">
+            <div className="order-2 xl:order-2 xl:col-span-9">
               <div className="prose dark:prose-invert max-w-none pb-8">{children}</div>
               {/* 上一篇，下一篇 */}
               <footer>
