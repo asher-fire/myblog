@@ -1,45 +1,109 @@
 ---
-title: 'nextjs-starter-blog项目：标签页跳转导致崩溃'
+title: 'nextjs-starter-blog项目：跳转导致崩溃'
 date: '2025-08-19'
-tags: ['nextjs', 'nextjs-starter-blog']
+tags: ['next-js', 'nextjs-starter-blog']
 draft: false
-summary: "点击标签页的 tag 跳转触发客户端异常，页面报 'Cannot read properties of undefined' 错误"
+summary: "点击某些tag 或 某些文章， 进行跳转时会触发客户端异常，页面报 'Cannot read properties of undefined' 错误"
 ---
 
 ## ❌ 报错情况
 
-我在 **tags 页面** 点击某个 tag 时遇到了奇怪的问题：  
+项目部署方式是 **`next build` + `SSG 静态部署` + `nginx` + `cdn`**，部署后访问发现：  
+   
+点击某些tag 或 某些文章时， 会触发报错:  
 
-- tag 名字原本是 `weChat-mini-program`。  
-- 部署方式是 **`next build` + `SSG 静态部署`**。  
-- 点击该 tag 时，页面直接报错： 
+* 偶尔出现，非必现。
+* 刷新页面后正常。
 
+页面上的报错：
 ```javascript
-Application error: a client-side exception has occurred while loading blog.hackerbank.cn
+Application error: a client-side exception has occurred     
+while loading blog.hackerbank.cn    
 (see the browser console for more information).
-webpack-f47f6a07d2567a0e.js:1 
-Uncaught TypeError: Cannot read properties of undefined (reading 'call')
-    at r (...)
-    at c (...)
-    at D (...)
-    at R (...)
-    ...
 ```
 
-## 📝 现象总结
+控制台上的报错：
+```javascript
+Uncaught ChunkLoadError: Loading chunk 602 failed.
+(error: https://blog.hackerbank.cn/_next/static/chunks/602-9f41d42ee3cdb281.js)
+    at r.f.j (webpack-f47f6a07d2567a0e.js:1:2946)
+    at webpack-f47f6a07d2567a0e.js:1:1226
+    at Array.reduce (<anonymous>)
+    at r.e (webpack-f47f6a07d2567a0e.js:1:1205)
+    at i (684-ea1dc4863da3d336.js:1:139812)
+    at 684-ea1dc4863da3d336.js:1:152386
+    at 684-ea1dc4863da3d336.js:1:152590
+    at t (684-ea1dc4863da3d336.js:1:153843)
+```
 
-1. **在本地开发 (`dev`)** 或 `npx serve out` 静态服务下点击这个tag都没有问题。
-2. **生产环境 build + ssg 部署后**：
-   * 在 **blog 页面点击这个 tag** → 正常。
-   * 在 **tags 页面点击这个 tag** → 报错。
-3. 报错的特殊现象：
-   * 刷新页面后正常。
-   * 在 DevTools 里复制一份 a 标签再点击 → 也正常。
-   * 说明问题只出在原始生成的标签链接上。
+## 🚨 原因分析
 
-## ✅ 问题解决
+ `Loading chunk 602 failed`错误通常与 **资源加载失败** 和 **缓存策略** 有关，问题很可能出在CDN缓存配置或浏览器缓存了旧版本的chunk文件上。所以问题出现的原因可能是：
 
-参考源码里面的blog，都是下划线命名方式，没有驼峰 + 下划线的方式，所以把tag 从 "weChat-mini-program"修改为 "wechat-mini-program"，重新 **`next build` + `SSG 静态部署`** 以后，问题解决了。
+1. 浏览器缓存了旧的 HTML 或 Webpack 清单文件（如 webpack-f47f6a07d2567a0e.js），导致它尝试加载一个 已不存在的旧版本 JS 分块（如 602-9f41d42ee3cdb281.js）
 
-推测是 **tag 命名大小写混用** 导致 `nextjs-starter-blog` 的 slug 生成或静态路由匹配出现异常。
-在生产构建下，大小写可能会引发路径不一致，最终导致客户端找不到正确的模块。
+2. CDN 缓存策略或部署流程导致新旧文件混合存在
+
+3. Nginx 配置可能未正确处理缓存失效
+
+## 🔎 分析确认
+
+1. 当我们手动去请求 [602-9f41d42ee3cdb281.js](https://blog.hackerbank.cn/_next/static/chunks/602-9f41d42ee3cdb281.js) 这个文件的时候，会发现的确是404
+
+![文件请求404截图](/static/images/nextjs-starter-blog/tag-nav-error/err1.png)
+
+2. 在/out文件夹使用`tree` 命令查看 目录tree，会发现的确没有602-9f41d42ee3cdb281.js 这个文件：
+```shell
+tree
+.
+├── 404.html
+├── about.html
+├── about.txt
+├── blog
+│   ├── nextjs-starter-blog
+│   │   ├── blog-link-incorrect.html
+│   │   ├── blog-link-incorrect.txt
+│   │   ├── tag-nav-error.html
+│   │   └── tag-nav-error.txt
+│   ├── page
+│   │   ├── 1.html
+│   │   └── 1.txt
+│   └── works
+│       ├── rich-woman.html
+│       └── rich-woman.txt
+├── blog.html
+├── blog.txt
+├── feed.xml
+├── index.html
+├── index.txt
+├── _next
+│   ├── 0gXTOLaB3jr-mutXn6Zms
+│   └── static
+│       ├── 0gXTOLaB3jr-mutXn6Zms
+│       │   ├── _buildManifest.js
+│       │   └── _ssgManifest.js
+│       ├── chunks
+│       │   ├── 341.62bb6d0b4fc1521a.js
+│       │   ├── 408.a9361fa171495218.js
+│       │   ├── 472.bb96caec2ba2da96.js
+│       │   ├── 496-0e57bfdfe9ca84ee.js
+│       │   ├── 4bd1b696-fd9f9c1f05277fc8.js
+│       │   ├── 602-caaa402421a8b87f.js
+│       │   ├── 63-740f78f75738eaad.js
+│       │   ├── 684-ea1dc4863da3d336.js
+│       │   ├── 874-df267709252ebb11.js
+│       │   ├── app
+....
+```
+
+## 🛠️ 问题解决
+1. cdn **正则刷新**（先使用**正则刷新**刷新整站，来看一下，是不是cdn缓存的问题）;
+ 后续正常以后再使用 **url刷新** 和 **目录刷新 (_next/)**
+
+![cdn刷新](/static/images/nextjs-starter-blog/cdn-refresh.png)
+
+2. 清除nginx 缓存
+```shell
+rm -rf /var/cache/nginx/*
+```
+3. `ctrl + f5` 清除浏览器缓存

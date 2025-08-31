@@ -1,6 +1,6 @@
 {
-  "nextjs": 1,
-  "nextjs-starter-blog": 1,
+  "next-js": 3,
+  "nextjs-starter-blog": 3,
   "wechat-mini-program": 1,
-  "product": 1
+  "products": 1
 }
