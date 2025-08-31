@@ -20,6 +20,14 @@ const TableOfContents = (props: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(true)
 
+  // Utility to encode URL fragment to valid CSS selector
+  const encodeSelector = (url: string) => {
+    // Remove # and encode special characters
+    const id = url.replace(/^#/, '')
+    // Escape digits at the start and encode non-ASCII characters
+    return `#${CSS.escape(id)}`
+  }
+
   useEffect(() => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
@@ -35,15 +43,19 @@ const TableOfContents = (props: TableOfContentsProps) => {
     })
 
     toc.forEach(({ url }) => {
-      const element = document.querySelector(url)
+      const selector = encodeSelector(url)
+      const element = document.querySelector(selector)
       if (element) {
         observer.observe(element)
+      } else {
+        console.warn(`Element not found for selector: ${selector}`)
       }
     })
 
     return () => {
       toc.forEach(({ url }) => {
-        const element = document.querySelector(url)
+        const selector = encodeSelector(url)
+        const element = document.querySelector(selector)
         if (element) {
           observer.unobserve(element)
         }
@@ -107,7 +119,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
                   'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200':
                     activeId !== url,
                 },
-                { 'font-bold': depth === 2 } // Optional: Bold main headings
+                { 'font-bold': depth === 2 }
               )}
               style={{ paddingLeft: `calc(${(depth - 2) * 12}px + 0.5rem)` }}
             >
