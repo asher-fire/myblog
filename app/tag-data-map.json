@@ -1,4 +1,6 @@
 {
   "wechat-mini-program": "微信小程序",
-  "products": "产品"
+  "products": "产品",
+  "frontend": "前端",
+  "cache": "缓存"
 }

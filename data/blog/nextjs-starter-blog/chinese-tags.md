@@ -116,9 +116,17 @@ summary: "nextjs-starter-blog v2 版本，在tag-data.json基础上实现中文t
 
       {`${tagMapData[t.toLocaleLowerCase()] || t} (${tagCounts[t]})`}
       ```
+
+      1.4 在blog里面的头部tags里面也需要使用中文tag对应的英文tag：
+      ```
+      title: '富婆排行榜'
+      date: '2025-08-10'
+      tags: ['wechat-mini-program', 'products']  // 注意这里也应该是英文tags
+      draft: false
+      layout: PostLayout
+      summary: '分享“富婆排行榜”微信小程序的开发故事：从居家办公灵感到项目转型、上线挑战，揭秘技术栈、用户数据和未来计划。'
+     ```
       
-
-
 ### 方案三、借鉴其它blog
    [https://github.com/timlrx/tailwind-nextjs-starter-blog?tab=readme-ov-file#examples-v2](https://github.com/timlrx/tailwind-nextjs-starter-blog?tab=readme-ov-file#examples-v2)
    

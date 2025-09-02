@@ -1,6 +1,11 @@
 {
+  "products": 4,
+  "gitlab": 1,
   "next-js": 3,
-  "nextjs-starter-blog": 3,
-  "wechat-mini-program": 1,
-  "products": 1
+  "nextjs-starter-blog": 4,
+  "前端": 1,
+  "nginx": 2,
+  "缓存": 1,
+  "nextjs": 1,
+  "wechat-mini-program": 1
 }
