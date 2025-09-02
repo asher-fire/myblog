@@ -11,6 +11,7 @@ import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import TableOfContents from '@/components/TableOfContents'
 import ReadingProgress from '@/components/ReadingProgress'
+import clsx from 'clsx'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -111,12 +112,18 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           </header>
           <div className="grid grid-cols-1 gap-y-6 pt-6 xl:grid-cols-12 xl:gap-x-6 xl:divide-y xl:divide-gray-200 xl:pt-10 xl:dark:divide-gray-700">
             {/* TOC 左侧固定 */}
-            <div className="order-1 border-0 xl:order-1 xl:col-span-3 xl:block">
-              {/* Table of Contents */}
-              <TableOfContents toc={toc} className="sticky top-24 xl:top-28" />
-            </div>
+            {toc && toc?.length > 0 && (
+              <div className="order-1 border-0 xl:order-1 xl:col-span-3 xl:block">
+                <TableOfContents toc={toc} className="sticky top-24 xl:top-28" />
+              </div>
+            )}
             {/* 文章主体 */}
-            <div className="order-2 xl:order-2 xl:col-span-9">
+            <div
+              className={clsx(
+                'order-2 xl:order-2',
+                toc && toc?.length > 0 ? 'xl:col-span-9' : 'xl:col-span-12'
+              )}
+            >
               <div className="prose dark:prose-invert max-w-none pb-8">{children}</div>
               {/* 上一篇，下一篇 */}
               <footer>
@@ -126,7 +133,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       {prev && prev.path && (
                         <Link
                           href={`/${prev.path}`}
-                          className="max-w-[50%] flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                          className="w-full flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md sm:max-w-[50%] dark:border-gray-700 dark:bg-gray-800"
                         >
                           <h2 className="mb-2 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                             上一篇
@@ -139,7 +146,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       {next && next.path && (
                         <Link
                           href={`/${next.path}`}
-                          className="max-w-[50%] flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+                          className="w-full flex-1 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-transform hover:-translate-y-1 hover:shadow-md sm:max-w-[50%] dark:border-gray-700 dark:bg-gray-800"
                         >
                           <h2 className="mb-2 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                             下一篇
