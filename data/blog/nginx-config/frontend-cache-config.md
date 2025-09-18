@@ -1,7 +1,7 @@
 ---
 title: '前端nginx缓存配置'
 date: '2025-08-31'
-tags: ['前端', 'nginx', '缓存']
+tags: ['frontend', 'nginx', 'cache']
 draft: false
 layout: PostLayout
 summary: "前端的nginx缓存配置策略"
