@@ -12,6 +12,12 @@ const projectsData: Project[] = [
     imgSrc: '/static/images/projects/rich-woman/code.jpg',
     href: 'blog/projects/rich-woman',
   },
+  {
+    title: '旧版blog',
+    description: `之前在csdn写的blog，已于2023年停更。`,
+    imgSrc: '/static/images/projects/old-blog/02.jpg',
+    href: 'https://blog.csdn.net/weixin_44050791',
+  },
 ]
 
 export default projectsData
