@@ -56,5 +56,3 @@ summary: "一些在AI实际落地业务过中，遇到的一些现象和一些�
 
 --- 
 当然，上面这些都是我的一些个人观点。欢迎大家各抒己见。
-
-当前文章, 同时发布在 [公众号](https://mp.weixin.qq.com/s/fBg2n7AuYIsksmxOOINjUw) 上面。
