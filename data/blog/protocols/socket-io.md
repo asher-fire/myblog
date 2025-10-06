@@ -1,9 +1,9 @@
 ---
-title: 'ai项目中使用socket.io'
+title: 'AI项目中使用socket.io'
 date: '2025-10-06'
 tags: ['AI', 'protocols']
 draft: true
-summary: '讨论在ai项目中使用socket.io的情况'
+summary: '讨论在AI项目中使用socket.io的情况'
 ---
 
 ## 一，简单介绍
