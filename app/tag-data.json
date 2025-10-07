@@ -1,15 +1,16 @@
 {
-  "ai": 3,
-  "protocols": 1,
+  "ai": 5,
+  "files": 2,
+  "protocols": 2,
   "ue": 2,
   "markdown": 1,
   "gitlab": 1,
-  "next-js": 3,
-  "nextjs-starter-blog": 4,
   "frontend": 1,
   "nginx": 2,
   "cache": 1,
   "nextjs": 1,
+  "nextjs-starter-blog": 4,
+  "next-js": 3,
   "wechat-mini-program": 1,
   "products": 1
 }
