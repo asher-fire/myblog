@@ -2,7 +2,7 @@
 title: 'AI项目中使用SSE'
 date: '2025-10-06'
 tags: ['AI', 'protocols']
-draft: true
+draft: false
 summary: '讨论在AI项目中使用SSE的情况'
 ---
 

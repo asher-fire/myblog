@@ -2,7 +2,7 @@
 title: '纯H5可以实现拍照和抓拍吗？'
 date: '2025-10-05'
 tags: ['UE']
-draft: true
+draft: false
 summary: '讨论纯H5是否可以实现拍照和抓拍'
 ---
 

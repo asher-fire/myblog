@@ -2,7 +2,7 @@
 title: 'AI项目中使用socket.io'
 date: '2025-10-06'
 tags: ['AI', 'protocols']
-draft: true
+draft: false
 summary: '讨论在AI项目中使用socket.io的情况'
 ---
 

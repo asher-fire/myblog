@@ -2,7 +2,7 @@
 title: '文件在线预览'
 date: '2025-10-07'
 tags: ['AI', 'files']
-draft: true
+draft: false
 summary: '讨论在AI项目中如何预览知识库上传的文件'
 ---
 
